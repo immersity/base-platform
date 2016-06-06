@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/immersity/base-platform/server/model"
+	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -50,7 +51,7 @@ func (self *AccountStore) CheckCredentials(email, password string) error {
 		return err
 	}
 
-	if account.Password != password {
+	if err := bcrypt.CompareHashAndPassword([]byte(account.Password), []byte(password)); err != nil {
 		return ErrInvalidCredentials
 	}
 
@@ -58,8 +59,15 @@ func (self *AccountStore) CheckCredentials(email, password string) error {
 }
 
 func (self *AccountStore) CreateAccount(a *model.Account) error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(a.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
 	a.ID = bson.NewObjectId()
 	a.CreatedOn = time.Now().UTC()
+	a.Password = string(hashedPassword)
+	a.Active = false
 
 	if err := self.Session.DB(self.DB).C(self.Coll).Insert(a); err != nil {
 		return err
