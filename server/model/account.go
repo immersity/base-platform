@@ -10,5 +10,8 @@ type Account struct {
 	ID        bson.ObjectId `bson:"_id"       json:"id"`
 	Email     string        `bson:"email"     json:"email"`
 	Password  string        `bson:"password"  json:"password"`
+	FirstName string        `bson:"firstName" json:"firstName"`
+	LastName  string        `bson:"lastName"  json:"lastName"`
+	Active    bool          `bson:"active"    json:"active"`
 	CreatedOn time.Time     `bson:"createdOn" json:"createdOn"`
 }
