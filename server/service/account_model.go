@@ -10,8 +10,8 @@ import (
 type account struct {
 	Email     string `json:"email"`
 	Password  string `json:"password"`
-	FirstName string `json:"first-name"`
-	LastName  string `json:"last-name"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
 }
 
 func (self *account) FieldMap(r *http.Request) binding.FieldMap {
