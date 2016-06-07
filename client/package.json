@@ -1,7 +1,7 @@
 {
-  "name": "shiken",
+  "name": "base",
   "version": "0.0.0",
-  "description": "Small description for shiken goes here",
+  "description": "Small description for immersity base platform goes here",
   "private": true,
   "directories": {
     "doc": "doc",
