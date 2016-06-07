@@ -1,0 +1,32 @@
+<div class="clearfix mxn2 mt2">
+    <div class="col-6 px2 mx-auto">
+        <form {{action 'signUp' on='submit'}}>
+            <h2 class="mb3 center">Registro</h2>
+            <div class="flex mb3">
+                <div class="flex-auto mr2">
+                    <h3 class="m0 mb2 center">Credenciales</h3>
+                    <label for="identification" class="label">Correo Electrónico</label>
+                    {{input id='identification' placeholder='Correo Electrónico' type='email' value=email class='input border-box'}}
+                    <label for="password" class="label">Contraseña</label>
+                    {{input id='password' placeholder='Contraseña' type='password' value=password class='input border-box'}}
+                    <label for="password-repeat" class="label">Contraseña (Repetir)</label>
+                    {{input id='password-repeat' placeholder='Contraseña' type='password' value=password class='input border-box'}}
+                </div>
+                <div class="flex-auto ml2">
+                    <h3 class="m0 mb2 center">Información Personal</h3>
+                    <label for="firstName" class="label">Nombre(s)</label>
+                    {{input id='firstName' placeholder='Nombre(s)' type='text' value=firstName class='input border-box'}}
+                    <label for="lastName" class="label">Apellido(s)</label>
+                    {{input id='lastName' placeholder='Apellido(s)' type='text' value=lastName class='input border-box'}}
+                </div>
+            </div>
+            <div class="flex justify-between content-center">
+                <button class="btn btn-primary" type="submit">Registrar</button>
+                {{#link-to 'login' class='py1 text-decoration-none'}}Ya tengo una cuenta.{{/link-to}}
+            </div>
+            {{#if errorMessage}}
+                <pre>Error: {{errorMessage}}</pre>
+            {{/if}}
+        </form>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<header>
+    <h1>Foro USM</h1>
+    {{#unless session.isAuthenticated}}
+        <pre>NO AUTORIZADO</pre>
+        {{#link-to "login"}}Entrar{{/link-to}}
+    {{/unless}}
+</header>
+<section id="topics">
+    <h1>Topics</h1>
+    <pre>Aquí están los tópicos.</pre>
+</section>

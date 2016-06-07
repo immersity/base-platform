@@ -1,0 +1,21 @@
+<div class="clearfix mxn2 mt2">
+    <div class="col-3 px2 mx-auto">
+        <form {{action 'authenticate' on='submit'}}>
+            <h2 class="mb3 center">Iniciar Sesión</h2>
+
+            <label for="identification" class="label">Correo Electrónico</label>
+            {{input id='identification' placeholder='Correo Electrónico' type='email' value=identification class='input border-box'}}
+            <label for="password" class="label">Contraseña</label>
+            {{input id='password' placeholder='Contraseña' type='password' value=password class='input border-box'}}
+
+            <div class="flex content-center justify-between mt3">
+                <button class="btn btn-primary m0" type="submit">Ingresar</button>
+                {{#link-to 'sign-up' class='py1 text-decoration-none'}}¿No tienes cuenta?{{/link-to}}
+            </div>
+            {{#if errorMessage}}
+                <pre>Error: {{errorMessage}}</pre>
+            {{/if}}
+        </form>
+    </div>
+</div>
+
