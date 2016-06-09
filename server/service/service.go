@@ -35,8 +35,6 @@ func (s *Service) Handler() http.Handler {
 
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
-	router.Use(middleware.CloseNotify)
-	router.Use(middleware.Timeout(30 * time.Second))
 
 	JwtAuth := jwtauth.New("HS256", []byte(s.config.JwtSecret), nil)
 
