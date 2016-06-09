@@ -18,6 +18,20 @@ type Account struct {
 	UpdatedOn time.Time `json:"updatedOn"`
 }
 
+func (a *Account) PreInsert() error {
+	if err := a.HashPassword(); err != nil {
+		return err
+	}
+
+	a.Role = "user"
+
+	now := time.Now().UTC()
+	a.CreatedOn = now
+	a.UpdatedOn = now
+
+	return nil
+}
+
 func (a *Account) HashPassword() error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(a.Password), bcrypt.DefaultCost)
 	if err != nil {

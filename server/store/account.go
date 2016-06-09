@@ -18,14 +18,9 @@ func NewAccountStore(db *sql.DB) *AccountStore {
 }
 
 func (self *AccountStore) CreateAccount(a *model.Account) error {
-	if err := a.HashPassword(); err != nil {
+	if err := a.PreInsert(); err != nil {
 		return NewInternalErr(err)
 	}
-	a.Role = "user"
-	a.Verified = false
-	now := time.Now().UTC()
-	a.CreatedOn = now
-	a.UpdatedOn = now
 	res, err := self.db.Exec(
 		sqlInsertAccount,
 		a.Role,
