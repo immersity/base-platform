@@ -24,6 +24,7 @@ func (a *Account) HashPassword() error {
 		return err
 	}
 	a.Password = string(hash)
+	return nil
 }
 
 func (a *Account) ComparePassword(password string) error {
