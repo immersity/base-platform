@@ -5,6 +5,8 @@ import (
 	"errors"
 	"log"
 	"net/http"
+
+	"github.com/immersity/base-platform/server/store"
 )
 
 const (
@@ -18,9 +20,11 @@ var (
 	ErrInvalidPathParam  = errors.New("invalid path param")
 
 	statusMap = map[error]int{
-		ErrMissingQueryParam: http.StatusBadRequest,
-		ErrInvalidQueryParam: http.StatusBadRequest,
-		ErrInvalidPathParam:  http.StatusNotFound,
+		ErrMissingQueryParam:        http.StatusBadRequest,
+		ErrInvalidQueryParam:        http.StatusBadRequest,
+		ErrInvalidPathParam:         http.StatusNotFound,
+		store.ErrInvalidCredentials: http.StatusUnauthorized,
+		store.ErrDuplicateAccount:   http.StatusConflict,
 	}
 )
 
@@ -38,20 +42,16 @@ func renderError(w http.ResponseWriter, r *http.Request, err error) {
 	if ok && ie != nil {
 		log.Printf("Error: %s, Request: %v", ie.InternalError(), r)
 	}
-
 	status := statusMap[err]
 	if status == 0 {
 		status = http.StatusInternalServerError
 	}
-
 	render(w, status, errResponse{err.Error()})
 }
 
 func render(w http.ResponseWriter, status int, v interface{}) {
 	w.Header().Set(contentType, jsonContentType)
-
 	w.WriteHeader(status)
-
 	if err := json.NewEncoder(w).Encode(v); err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
