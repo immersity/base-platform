@@ -17,17 +17,14 @@ func NewAccountService(store AccountStore) *AccountService {
 }
 
 func (self *AccountService) CreateAccount(w http.ResponseWriter, r *http.Request) {
-	candidate := account{}
+	candidate := Account{}
 	if binding.Bind(r, &candidate).Handle(w) {
 		return
 	}
-
 	account := candidate.ToModel()
-
 	if err := self.Store.CreateAccount(account); err != nil {
 		renderError(w, r, err)
 		return
 	}
-
 	render(w, http.StatusCreated, account)
 }

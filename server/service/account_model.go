@@ -7,14 +7,14 @@ import (
 	"github.com/mholt/binding"
 )
 
-type account struct {
+type Account struct {
 	Email     string `json:"email"`
 	Password  string `json:"password"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 }
 
-func (self *account) FieldMap(r *http.Request) binding.FieldMap {
+func (self *Account) FieldMap(r *http.Request) binding.FieldMap {
 	return binding.FieldMap{
 		&self.Email: binding.Field{
 			Form:     "email",
@@ -35,7 +35,7 @@ func (self *account) FieldMap(r *http.Request) binding.FieldMap {
 	}
 }
 
-func (self *account) ToModel() *model.Account {
+func (self *Account) ToModel() *model.Account {
 	return &model.Account{
 		Email:     self.Email,
 		Password:  self.Password,
