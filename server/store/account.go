@@ -2,7 +2,6 @@ package store
 
 import (
 	"database/sql"
-	"time"
 
 	"github.com/VividCortex/mysqlerr"
 	"github.com/go-sql-driver/mysql"
@@ -17,20 +16,20 @@ func NewAccountStore(db *sql.DB) *AccountStore {
 	return &AccountStore{db}
 }
 
-func (self *AccountStore) CreateAccount(a *model.Account) error {
-	if err := a.PreInsert(); err != nil {
+func (self *AccountStore) CreateAccount(account *model.Account) error {
+	if err := account.PreInsert(); err != nil {
 		return NewInternalErr(err)
 	}
 	res, err := self.db.Exec(
 		sqlInsertAccount,
-		a.Role,
-		a.Verified,
-		a.Email,
-		a.Password,
-		a.FirstName,
-		a.LastName,
-		a.CreatedOn,
-		a.UpdatedOn,
+		account.Role,
+		account.Verified,
+		account.Email,
+		account.Password,
+		account.FirstName,
+		account.LastName,
+		account.CreatedOn,
+		account.UpdatedOn,
 	)
 	if err != nil {
 		if mysqlErr, ok := err.(*mysql.MySQLError); ok {
@@ -44,7 +43,7 @@ func (self *AccountStore) CreateAccount(a *model.Account) error {
 	if err != nil {
 		return NewInternalErr(err)
 	}
-	a.ID = id
+	account.ID = id
 	return nil
 }
 
