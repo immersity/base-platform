@@ -8,34 +8,27 @@ import (
 
 	flag "github.com/ianschenck/envflag"
 	"github.com/immersity/base-platform/server/service"
-	"github.com/immersity/base-platform/server/store/mongo"
+	"github.com/immersity/base-platform/server/store"
 )
 
 func main() {
 	var (
-		port      = flag.Int("PORT", 3000, "port to listen on")
-		mongoDb   = flag.String("MONGO_DB", "immersity", "mongo db")
-		mongoDsn  = flag.String("MONGO_DSN", "127.0.0.1", "mongo dsn")
-		jwtSecret = flag.String("JWT_SECRET", "olakease", "secret to sign tokens with")
-		jwtExpiry = flag.Duration("JWT_EXPIRY", time.Hour*1, "token expiry")
+		port      = flag.Int("PORT", 3000, "port")
+		mysqlDsn  = flag.String("MYSQL_DSN", "crowl:crowl@/immersity", "mysql dsn")
+		jwtSecret = flag.String("JWT_SECRET", "olakease", "jwt secret")
+		jwtExpiry = flag.Duration("JWT_EXPIRY", time.Hour*1, "jwt expiry")
 	)
 	flag.Parse()
-
-	mongoStore, err := mongo.New(mongo.Config{
-		DB:       *mongoDb,
-		MongoDsn: *mongoDsn,
+	st, err := store.New(store.Config{
+		Dsn: *mysqlDsn,
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer mongoStore.Close()
-
-	addr := fmt.Sprintf("0.0.0.0:%d", *port)
-
-	srvc := service.New(mongoStore, service.Config{
+	defer st.Close()
+	srvc := service.New(st, service.Config{
 		JwtSecret: *jwtSecret,
 		JwtExpiry: *jwtExpiry,
 	})
-
-	log.Fatal(http.ListenAndServe(addr, srvc.Handler()))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", *port), srvc.Handler()))
 }
