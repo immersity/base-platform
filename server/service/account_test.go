@@ -48,6 +48,16 @@ func TestCreateAccountEndpoint(t *testing.T) {
 		},
 		{
 			map[string]string{
+				"email":     "foobar.com",
+				"password":  "foo-bar",
+				"firstName": "Foo",
+				"lastName":  "Bar",
+			},
+			httptest.NewRecorder(),
+			http.StatusBadRequest,
+		},
+		{
+			map[string]string{
 				"email":     "foo@bar.com",
 				"password":  "foobar",
 				"firstName": "Foo",
