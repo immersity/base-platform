@@ -47,7 +47,7 @@ func (self *AccountStore) CreateAccount(account *model.Account) error {
 	return nil
 }
 
-func (self *AccountStore) CheckCredentials(email, password string) error {
+func (self *AccountStore) CheckCredentials(email, password string) (string, error) {
 	account := model.Account{}
 	if err := self.db.QueryRow(sqlSelectAccountCredentials, email).Scan(
 		&account.ID,
@@ -55,13 +55,13 @@ func (self *AccountStore) CheckCredentials(email, password string) error {
 		&account.Password,
 	); err != nil {
 		if err == sql.ErrNoRows {
-			return ErrInvalidCredentials
+			return "", ErrInvalidCredentials
 		} else {
-			return NewInternalErr(err)
+			return "", NewInternalErr(err)
 		}
 	}
 	if err := account.ComparePassword(password); err != nil {
-		return ErrInvalidCredentials
+		return "", ErrInvalidCredentials
 	}
-	return nil
+	return account.Role, nil
 }
