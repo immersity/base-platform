@@ -5,7 +5,7 @@ import (
 )
 
 type AuthStore interface {
-	CheckCredentials(email, password string) error
+	CheckCredentials(email, password string) (string, error)
 }
 
 type AccountStore interface {

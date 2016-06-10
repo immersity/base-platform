@@ -17,7 +17,7 @@ func NewAccountService(store AccountStore) *AccountService {
 }
 
 func (self *AccountService) CreateAccount(w http.ResponseWriter, r *http.Request) {
-	candidate := Account{}
+	candidate := NewAccount{}
 	if binding.Bind(r, &candidate).Handle(w) {
 		return
 	}

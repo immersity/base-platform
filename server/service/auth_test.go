@@ -3,20 +3,21 @@ package service
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/immersity/base-platform/server/store"
 )
 
 type AuthStoreMock struct{}
 
-func (s *AuthStoreMock) CheckCredentials(email, password string) error {
-	if email != "foo@bar.com" || password != "foobar" {
-		return errors.New("store: invalid credentials")
+func (s *AuthStoreMock) CheckCredentials(email, password string) (string, error) {
+	if email != "foo@bar.com" || password != "foobar123" {
+		return "", store.ErrInvalidCredentials
 	}
-	return nil
+	return "user", nil
 }
 
 var authService *AuthService = NewAuthService(&AuthStoreMock{}, "olakease", time.Hour*1)
@@ -43,7 +44,7 @@ func TestCreateTokenEndpoint(t *testing.T) {
 		{
 			map[string]string{
 				"email":    "foo@bar.com",
-				"password": "foobar",
+				"password": "foobar123",
 			},
 			httptest.NewRecorder(),
 			http.StatusCreated,
@@ -54,7 +55,7 @@ func TestCreateTokenEndpoint(t *testing.T) {
 				"password": "barfoo",
 			},
 			httptest.NewRecorder(),
-			http.StatusInternalServerError,
+			http.StatusUnauthorized,
 		},
 	}
 	for _, c := range cases {

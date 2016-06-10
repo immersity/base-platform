@@ -40,7 +40,7 @@ type errResponse struct {
 func renderError(w http.ResponseWriter, r *http.Request, err error) {
 	ie, ok := err.(InternalError)
 	if ok && ie != nil {
-		log.Printf("Error: %s, Request: %v", ie.InternalError(), r)
+		log.Printf("[internal error] %s\n", ie.InternalError())
 	}
 	status := statusMap[err]
 	if status == 0 {
