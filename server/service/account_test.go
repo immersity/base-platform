@@ -3,12 +3,12 @@ package service
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/immersity/base-platform/server/model"
+	"github.com/immersity/base-platform/server/store"
 )
 
 type AccountStoreMock struct {
@@ -17,7 +17,7 @@ type AccountStoreMock struct {
 
 func (s *AccountStoreMock) CreateAccount(a *model.Account) error {
 	if exists := s.Accounts[a.Email]; exists {
-		return errors.New("storage: duplicate account")
+		return store.ErrDuplicateAccount
 	}
 	s.Accounts[a.Email] = true
 	return nil
@@ -64,7 +64,7 @@ func TestCreateAccountEndpoint(t *testing.T) {
 				"lastName":  "Bar",
 			},
 			httptest.NewRecorder(),
-			http.StatusInternalServerError,
+			http.StatusConflict,
 		},
 	}
 	for _, c := range cases {
